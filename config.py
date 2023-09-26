@@ -68,7 +68,8 @@ def create_generation_stats_file(clean_stats=False):
                              'diversity_vuln','num_entries','num_targets','num_paths','generation_time','generation_paths'])
 
 ### Attack Graph models settings
-ag_models = ["NETSPA","TVA","MULVAL"]
+ag_models = ["NETSPA","TVA"] # without MulVAL
+# ag_models = ["NETSPA","TVA","MULVAL"] # with MulVAL
 
 def get_graph_structure_filename(model):
     return model+"_graph_structure.csv"
