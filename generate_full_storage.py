@@ -1,6 +1,5 @@
-import nvdlib, time, json
+import nvdlib, time, json, os
 from config import cpe_file
-cve_file = "benchAG/inventory/vulnerabilities"
 
 def getCPElist(cpe_file):
     server_cpe = nvdlib.searchCPE(keywordSearch="mysql", limit=2000)
@@ -68,7 +67,6 @@ def getCVElist(cpe_file, cve_file):
             break
 
         count+=1
-        print(count)
 
 # def getCVElist_smart():
 #     all_cves=[]
@@ -83,7 +81,10 @@ def getCVElist(cpe_file, cve_file):
 #     print(len(all_cves))
 
 def generate_intentory():
+    if not os.path.exists("inventory"): os.mkdir("inventory")
+    
     getCPElist(cpe_file)
     print("created CPE file")
-    getCVElist(cpe_file, cve_file)
-    print("created CVE file")
+    for i in range(1,4):
+        getCVElist(cpe_file, "inventory/vulnerabilities"+str(i)+".json")
+        print("created CVE file")

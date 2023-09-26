@@ -1,5 +1,12 @@
 import json, csv, os
 
+### Benchmark settings
+num_cores = 3
+timeout = 7000
+generate_all_paths = True ### NOTICE: If True, it will be much more expensive
+num_entry_points = [1,5,25,50]
+pruning_lens = [2,3,5,7]
+
 ### Inventories
 cpe_file = "inventory/services.json"
 cve_file1 = "inventory/vulnerabilities1.json"
@@ -23,18 +30,13 @@ def get_pool_vulnerabilities(tot_vuln):
             return vulns1+vulns2+vulns3
 
 ### Reachability configuration
-# nhosts = [10,25,50,75,100,150,250,500,1000,2500]
-nhosts = [10,25,50,75,100,150,250,500]
-# nhosts = [10,25,50,75,100,150,250]
-nvulns = [5,10,25,50,100,200]#,250,500]
-# topologies = ['mesh','random','star','ring','tree','powerlaw','lan0','lan25','lan50']
-topologies = ['random']
-distro = ['poisson']
-# distro = ['bernoulli','binomial','poisson']
+nhosts = [5,10,25,50,75,100,200,300,500]
+nvulns = [5,10,25,50,75,100,200,300,500]
+topologies = ['mesh','random','star','ring','tree','powerlaw','lan0','lan25','lan50']
+distro = ['bernoulli','binomial','poisson']
 diversity = [0,0.25,0.5,0.75,1] #from all equal (0) to all diverse (1)
-# diversity = [0,1]
 
-### Benchmark settings
+### File storage setting
 NETWORK_FOLDER = "networks/"
 MULVAL_IN_FOLDER = "mulval_inputs_few/"
 MULVAL_OUT_FOLDER = "mulval_outputs/"
@@ -48,12 +50,6 @@ path_stats_file_pruning = "analysis/path_stats_pruning.csv"
 mulval_time_file = STATS_FOLDER+"time_mulval.txt"
 graph_stats_file = "graph_statistics.csv"
 generation_stats_file = "generation_statistics.csv"
-num_cores = 3
-timeout = 1000
-generate_all_paths = True ### If True, it will be much more expensive
-num_entry_points = [1,5,25,50]
-pruning_lens = [2,3,5,7]
-
 
 def create_graph_stats_file(clean_stats=False):
     if not os.path.exists(STATS_FOLDER): os.makedirs(STATS_FOLDER)
@@ -72,8 +68,7 @@ def create_generation_stats_file(clean_stats=False):
                              'diversity_vuln','num_entries','num_targets','num_paths','generation_time','generation_paths'])
 
 ### Attack Graph models settings
-ag_models = ["NETSPA","TVA","MULVAL"]#,"MULTI"]
-# ag_models = ["NETSPA","TVA"]
+ag_models = ["NETSPA","TVA","MULVAL"]
 
 def get_graph_structure_filename(model):
     return model+"_graph_structure.csv"

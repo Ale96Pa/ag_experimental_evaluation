@@ -13,7 +13,6 @@ def write_graphstats(ag_file):
     logging.basicConfig(filename='structural_graphs.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
 
     graph_file = config.GRAPH_FOLDER+ag_file
-    # graph_file = "ag_few/"+ag_file
     if not os.path.exists(graph_file): 
         logging.error("File %s NOT exists", ag_file)
         return
@@ -112,13 +111,8 @@ if __name__ == "__main__":
                     for u in config.diversity:
                         for model in config.ag_models:
                             filename = model+"_"+str(n)+'_'+str(v)+'_'+t+'_'+d+'_'+str(u)+'.graphml'
-                            if os.path.exists(config.GRAPH_FOLDER+filename) and filename not in computed_files and "MULTI" in filename:
+                            if os.path.exists(config.GRAPH_FOLDER+filename) and filename not in computed_files:
                                 filenames.append(filename)
-    # filenames = []
-    # for filename in os.listdir("ag_few"):
-    #     if filename not in computed_files:
-    #         filenames.append(filename)
-    # print(filenames)
 
     with ProcessPool(max_workers=config.num_cores) as pool:
         process = pool.map(write_graphstats, filenames)

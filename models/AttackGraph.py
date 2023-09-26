@@ -1,11 +1,3 @@
-from sentence_transformers import SentenceTransformer
-
-def embed_vulns(vuln_list):
-    maxi_str = ""
-    for v in vuln_list:
-        maxi_str+=v
-    return SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2').encode(maxi_str,normalize_embeddings=True)
-
 class Node:
     def __init__(self, privilege, host):
         self.privilege = privilege
@@ -26,8 +18,6 @@ class CompactedEdge:
         self.src = src
         self.dst = dst
         self.vulnList = vuln_list
-        # self.vulnEmbed = embed_vulns(vuln_list)
-        # self.vulnHash= hash(tuple(vuln_list))
 
 class AttackGraph:
     def __init__(self,nodes,edges):

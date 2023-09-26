@@ -3,11 +3,10 @@ from pebble import ProcessPool
 import os.path, sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
-# from generate_full_storage import generate_intentory
+from generate_full_storage import generate_intentory
 from generate_reachability import write_reachability
 import algorithms.tva as TVA
 import algorithms.netspa as NETSPA
-import algorithms.multigraph as MULTI
 import config
 
 """
@@ -29,7 +28,7 @@ Generate the benchmark of attack graphs models in "attack_graphs" folder
 """
 def generate_ag_models(params):
     filename, model = params
-    logging.basicConfig(filename='agmodel.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
+    logging.basicConfig(filename='logging/agmodel.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
 
     if not os.path.exists(config.GRAPH_FOLDER): os.makedirs(config.GRAPH_FOLDER)
     generated_files = os.listdir(config.GRAPH_FOLDER)
@@ -60,22 +59,15 @@ def generate_ag_models(params):
                 writer.writerow(params_network_ag)
             logging.info("[TVA GENERATED] %s", filename)
         else: logging.debug("Already generated TVA %s", filename)
-    elif model == "MULTI":
-        if "MULTI_"+filename.split(".json")[0]+".graphml" not in generated_files:
-            logging.info("Starting generation of MULTI, file %s", filename)
-            start_multi = time.perf_counter()
-            MULTI.build_model_graph(filename)
-            end_multi = time.perf_counter()
-            generation_time = end_multi-start_multi
-            with open(config.STATS_FOLDER+config.graph_stats_file,'a',newline='') as fd:
-                params_network_ag = [model]+filename.split(".json")[0].split("_")+[generation_time]
-                writer = csv.writer(fd)
-                writer.writerow(params_network_ag)
-            logging.info("[MULTI GENERATED] %s", filename)
-        else: logging.debug("Already generated MULTI %s", filename)
-
 
 if __name__ == "__main__":
+    """
+    To build the inventory from skratch
+    NOTICE: this may require long time for NIST APIs. We suggest to use the 
+    proposed syntetic inventory
+    """
+    generate_intentory()
+
     """
     Create networks for reachability graphs
     """
@@ -89,13 +81,13 @@ if __name__ == "__main__":
                         filename = str(n)+'_'+str(v)+'_'+t+'_'+d+'_'+str(u)+'.json'
                         filenames.append(filename)
                         for model in config.ag_models: 
-                            if model == "MULTI": parameters.append([filename, model])
+                            parameters.append([filename, model])
 
-    # """
-    # Generate Reachability Networks
-    # """
-    # with ProcessPool(max_workers=config.num_cores) as pool:
-    #     process = pool.map(generate_network, filenames)
+    """
+    Generate Reachability Networks
+    """
+    with ProcessPool(max_workers=config.num_cores) as pool:
+        process = pool.map(generate_network, filenames)
 
     """
     Generate Attack Graphs models

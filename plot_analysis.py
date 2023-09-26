@@ -1,24 +1,9 @@
-import json, csv
-import numpy as np
+import json, csv, os.path, sys
 import matplotlib.pyplot as plt
 import pandas as pd
-import os.path, sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 
-from algorithms.utils import retrieve_privileges
 import config
-
-def count_priv_network(netfile):
-    count_dict = {}
-    
-    with open(netfile) as f: vulnerabilities = json.load(f)["vulnerabilities"]
-
-    for vuln in vulnerabilities:
-        v,pre,post = retrieve_privileges(vuln["id"],vulnerabilities)
-        # if (pre,post) in count_dict.keys(): count_dict[(pre,post)]+=1
-        # else: count_dict[(pre,post)]=1
-        count_dict[(pre,post)]=True
-    return len(count_dict.keys()), list(count_dict.keys())
 
 def plot_by_graph_property(graph_param,model):
     fig, axs = plt.subplots(5, 1)
@@ -638,23 +623,3 @@ if __name__ == "__main__":
     # for model in ["NETSPA", "TVA", "MULVAL"]:
     #     for param_z in ['num_edges']: # 'num_nodes','density','num_strong_components','time_density','time_components','time_degree','time_centrality']:
     #         _3dplot_host_vuln('num_host', 'num_vuln', param_z, model, fixed_param)
-
-    """
-    Privileges count analysis
-    """
-    # count_dict = {}
-    # couples = []
-    # for file in os.listdir(config.NETWORK_FOLDER):
-    #     diversity = file.split("_")[4].split(".json")[0]
-    #     lencount, listcouples = count_priv_network(config.NETWORK_FOLDER+file)
-    #     if diversity in count_dict.keys(): count_dict[diversity].append(lencount)
-    #     else: count_dict[diversity] = [lencount]
-    #     couples+=listcouples
-    # print(count_dict)
-    # print(set(listcouples))
-    # # print(np.quantile(dict_all,[0,0.25,0.5,0.75,1]))
-
-    # # fig, ax = plt.subplots()
-    # # ax.boxplot(count_dict.values())
-    # # ax.set_xticklabels(count_dict.keys())
-    # # plt.show()

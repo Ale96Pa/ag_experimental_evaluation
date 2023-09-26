@@ -11,7 +11,7 @@ networkServiceInfo(host,'cpe',TCP,80,privilegeEscalation)
 vulExists(host, CVE, 'cpe').
 vulProperty(CVE, accessVector, privilegeEscalation).
 """
-import json, random, os, csv
+import json, os, csv
 import networkx as nx
 import os.path, sys
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
@@ -29,23 +29,6 @@ def write_mulval_inputs(network_file):
     rules = []
     hosts_ids = [o["hostname"] for o in devices]
 
-    # for num_src in config.num_entry_points+[len(devices)-2]:
-    #     if num_src > len(devices): num_s = len(devices)-1
-    #     else: num_s = num_src
-    #     for h in hosts_ids[0:num_s]:
-    #         rule_start = "attackerLocated("+str(h)+")."
-    #         rules.append(rule_start)
-
-    # for num_trg in config.num_entry_points+[len(devices)-2]:
-    #     if num_trg > len(devices): num_t = len(devices)
-    #     else: num_t = num_trg
-    #     c=0
-    #     for n in hosts_ids:
-    #         if n not in hosts_ids[0:num_s]: 
-    #             rule_goal = "attackerGoal(execCode("+str(n)+",_))."
-    #             rules.append(rule_goal)
-    #             c+=1
-    #         if c == num_t: break
     rules.append("attackerLocated(h"+str(hosts_ids[0])+").")
     rules.append("attackGoal(execCode(h"+str(hosts_ids[len(hosts_ids)-1])+",_)).")
 
@@ -92,7 +75,6 @@ def write_mulval_inputs(network_file):
         rules.append(rule_vulprop)
     
     with open(config.MULVAL_IN_FOLDER+network_file.split("/")[1].replace(".json",".P"), "w") as mulval_f:
-    # with open("realAG/format/mulval_real.P", "w") as mulval_f:
         for rule in rules:
             mulval_f.write(rule)
             mulval_f.write('\n')
@@ -113,8 +95,7 @@ def build_model(mulv_input):
             src=param_e[0]
             dst=param_e[1]
             G.add_edge(src, dst)
-    # nx.write_graphml_lxml(G, config.GRAPH_FOLDER+"MULVAL_"+mulv_input.split("/")[1].split(".P")[0]+".graphml")
-    nx.write_graphml_lxml(G, "ag_few/MULVAL_"+mulv_input.split("/")[1].split(".P")[0]+".graphml")
+    nx.write_graphml_lxml(G, config.GRAPH_FOLDER+"MULVAL_"+mulv_input.split("/")[1].split(".P")[0]+".graphml")
 
 def stats_mulval_time():
     isDataset=False
@@ -140,29 +121,28 @@ def stats_mulval_time():
 
 if __name__ == "__main__":
     
-    # """
-    # Generate input files according to MULVAL notation
-    # """
-    # if not os.path.exists(config.MULVAL_IN_FOLDER): os.makedirs(config.MULVAL_IN_FOLDER)
-    # for ag_file in os.listdir(config.NETWORK_FOLDER):
-    #     if config.MULVAL_IN_FOLDER+ag_file.replace(".json",".P") not in os.listdir(config.MULVAL_IN_FOLDER):
-    #         params = ag_file.split("_")
-    #         if params[2] in ['star','tree','powerlaw','lan25']:
-    #             write_mulval_inputs(config.NETWORK_FOLDER+ag_file)
-    #             print(ag_file)
-                    
+    """
+    Generate input files according to MULVAL notation
+    """
+    if not os.path.exists(config.MULVAL_IN_FOLDER): os.makedirs(config.MULVAL_IN_FOLDER)
+    for ag_file in os.listdir(config.NETWORK_FOLDER):
+        if config.MULVAL_IN_FOLDER+ag_file.replace(".json",".P") not in os.listdir(config.MULVAL_IN_FOLDER):
+            params = ag_file.split("_")
+            write_mulval_inputs(config.NETWORK_FOLDER+ag_file)                    
+    
+    ### Uncomment this part after running MulVAL tool with generated .P files (https://people.cs.ksu.edu/~xou/mulval/)
     
     # """
     # Parse MULVAL time statistics
     # """
     # stats_mulval_time()
-
-    """
-    Parse MULVAL output files to generate attack graphs
-    """
-    computed_file=[]
-    for filename in os.listdir(config.MULVAL_OUT_FOLDER):
-        network_setting = filename.split("-")[0]
-        if "ARCS" in filename and network_setting not in computed_file: 
-            build_model(config.MULVAL_OUT_FOLDER+network_setting)
-            computed_file.append(network_setting)
+    #
+    # """
+    # Parse MULVAL output files to generate attack graphs
+    # """
+    # computed_file=[]
+    # for filename in os.listdir(config.MULVAL_OUT_FOLDER):
+    #     network_setting = filename.split("-")[0]
+    #     if "ARCS" in filename and network_setting not in computed_file: 
+    #         build_model(config.MULVAL_OUT_FOLDER+network_setting)
+    #         computed_file.append(network_setting)

@@ -10,7 +10,7 @@ import algorithms.netspa
 import algorithms.tva
 
 def pick_entry_points(graph_file):
-    logging.basicConfig(filename='paths.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
+    logging.basicConfig(filename='logging/paths.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
 
     ag_graph = config.GRAPH_FOLDER+graph_file
 
@@ -32,7 +32,6 @@ def pick_entry_points(graph_file):
     for i in config.num_entry_points:
         for j in config.num_entry_points:
             combinations.append([i,j])
-    # combinations.append([len(G.nodes()),len(G.nodes())])
     
     ### Check if experiment already performed
     df_path = pd.read_csv(config.path_stats_file)
@@ -82,7 +81,7 @@ def pick_entry_points(graph_file):
     logging.info("[END] %s", graph_file)
 
 def pruning(graph_file):
-    logging.basicConfig(filename='pruning_paths.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
+    logging.basicConfig(filename='logging/pruning_paths.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
 
     ag_graph = config.GRAPH_FOLDER+graph_file
 
@@ -159,45 +158,13 @@ if __name__ == "__main__":
     """
     All paths computation
     """
-    # reset_statistics=False
-    # computed_files = []
-    # for model in config.ag_models:
-    #     if reset_statistics:
-    #         config.create_path_stats_file(reset_statistics)
-    #     else:
-    #         df=pd.read_csv(config.path_stats_file)
-    #         df["filename"] = model+"_"+df["num_host"].astype(str)+"_"+\
-    #             df["num_vuln"].astype(str)+"_"+df["topology"]+"_"+df['distro_vuln']+\
-    #             "_"+df['diversity_vuln'].astype(str)+'.graphml'
-    #         computed_files+=list(df["filename"])
-    # for elem in computed_files:
-    #     if type(elem) != str: continue
-    #     if "0.0" in elem: 
-    #         newelem = elem.replace("0.0","0")
-    #         computed_files.append(newelem)
-    #     if "1.0" in elem: 
-    #         newelem = elem.replace("1.0","1")
-    #         computed_files.append(newelem)
-
-    # filenames=[]
-    # for filename in os.listdir(config.GRAPH_FOLDER):
-    #     if filename not in computed_files:
-    #         if "1000" not in filename:
-    #             filenames.append(filename)
-                                
-    # with ProcessPool(max_workers=config.num_cores) as pool:
-    #     process = pool.map(pick_entry_points, filenames, timeout=200)
-    
-    """
-    Pruning paths computation
-    """
     reset_statistics=False
     computed_files = []
     for model in config.ag_models:
-        if reset_statistics or not os.path.exists(config.path_stats_file_pruning):
-            config.create_path_stats_file_pruning(reset_statistics)
+        if reset_statistics:
+            config.create_path_stats_file(reset_statistics)
         else:
-            df=pd.read_csv(config.path_stats_file_pruning)
+            df=pd.read_csv(config.path_stats_file)
             df["filename"] = model+"_"+df["num_host"].astype(str)+"_"+\
                 df["num_vuln"].astype(str)+"_"+df["topology"]+"_"+df['distro_vuln']+\
                 "_"+df['diversity_vuln'].astype(str)+'.graphml'
@@ -214,8 +181,38 @@ if __name__ == "__main__":
     filenames=[]
     for filename in os.listdir(config.GRAPH_FOLDER):
         if filename not in computed_files:
-            if "1000" not in filename and ("MULTI" in filename or "NETSPA" in filename):
-                filenames.append(filename)
+            filenames.append(filename)
                                 
     with ProcessPool(max_workers=config.num_cores) as pool:
-        process = pool.map(pruning, filenames, timeout=5000)
+        process = pool.map(pick_entry_points, filenames, timeout=config.timeout)
+    
+    # """
+    # Pruning paths computation
+    # """
+    # reset_statistics=False
+    # computed_files = []
+    # for model in config.ag_models:
+    #     if reset_statistics or not os.path.exists(config.path_stats_file_pruning):
+    #         config.create_path_stats_file_pruning(reset_statistics)
+    #     else:
+    #         df=pd.read_csv(config.path_stats_file_pruning)
+    #         df["filename"] = model+"_"+df["num_host"].astype(str)+"_"+\
+    #             df["num_vuln"].astype(str)+"_"+df["topology"]+"_"+df['distro_vuln']+\
+    #             "_"+df['diversity_vuln'].astype(str)+'.graphml'
+    #         computed_files+=list(df["filename"])
+    # for elem in computed_files:
+    #     if type(elem) != str: continue
+    #     if "0.0" in elem: 
+    #         newelem = elem.replace("0.0","0")
+    #         computed_files.append(newelem)
+    #     if "1.0" in elem: 
+    #         newelem = elem.replace("1.0","1")
+    #         computed_files.append(newelem)
+
+    # filenames=[]
+    # for filename in os.listdir(config.GRAPH_FOLDER):
+    #     if filename not in computed_files:
+    #         filenames.append(filename)
+                                
+    # with ProcessPool(max_workers=config.num_cores) as pool:
+    #     process = pool.map(pruning, filenames, timeout=config.timeout)

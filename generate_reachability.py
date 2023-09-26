@@ -1,6 +1,6 @@
-import networkx as nx
-import numpy as np
 import json, random, uuid
+import numpy as np
+import networkx as nx
 
 import models.NetworkModel as net
 import config

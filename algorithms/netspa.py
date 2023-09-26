@@ -67,7 +67,7 @@ def create_data_structures(G):
     return S2C,C2V,V2S
 
 def main_loop(params):
-    logging.basicConfig(filename='netspa.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
+    logging.basicConfig(filename='logging/netspa.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
 
     ag_file, AG_model, BFSQueue, generate_paths = params
     
@@ -123,7 +123,7 @@ def main_loop(params):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='netspa.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
+    logging.basicConfig(filename='logging/netspa.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
     config.create_generation_stats_file(False)
     model = "NETSPA"
     generate_path = config.generate_all_paths
