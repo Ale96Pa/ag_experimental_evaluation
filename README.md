@@ -69,7 +69,7 @@ After the generation of network inventories (step2 of previous section), uncomme
 
 ### 3. Generate MulVAL attack graph
 
-Generate the attack graph according to MulVAL project instruction. We provide a bash script to auotmatically process input files. The file "exec_mulval.sh" pick files from a folder "dataset" and generate attack graph automatically, keeping track of the required generation time in the "time_log.txt" file. It works with a slight modification of the MulVAL main that we also provide in the mulval_util folder.
+Generate the attack graph according to MulVAL project instruction. We provide a bash script to auotmatically process input files. The file "exec_mulval.sh" pick files from a folder "dataset" and generate attack graph automatically, keeping track of the required generation time in the "time_log.txt" file. It works with a slight modification of the MulVAL main that we also provide in the mulval_util folder: you should replace the file graph_gen.sh in our folder in the mulval/utils folder of the original project.
 
 Once processed, put all the generated ARCS.csv, VERTICES.csv, and AttackGraph.txt files in the "mulval_output" folder, and the file "time_log.txt" in the analysis folder.
 
