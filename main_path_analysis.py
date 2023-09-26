@@ -161,7 +161,7 @@ if __name__ == "__main__":
     reset_statistics=False
     computed_files = []
     for model in config.ag_models:
-        if reset_statistics:
+        if reset_statistics or not os.path.exists(config.path_stats_file):
             config.create_path_stats_file(reset_statistics)
         else:
             df=pd.read_csv(config.path_stats_file)

@@ -33,7 +33,7 @@ def get_pool_vulnerabilities(tot_vuln):
 nhosts = [5,10,25,50,75,100,200,300,500]
 nvulns = [5,10,25,50,75,100,200,300,500]
 topologies = ['mesh','random','star','ring','tree','powerlaw','lan0','lan25','lan50']
-distro = ['bernoulli','binomial','poisson']
+distro = ['bernoulli','binomial','poisson','uniform']
 diversity = [0,0.25,0.5,0.75,1] #from all equal (0) to all diverse (1)
 
 ### File storage setting
@@ -41,10 +41,12 @@ NETWORK_FOLDER = "networks/"
 MULVAL_IN_FOLDER = "mulval_inputs_few/"
 MULVAL_OUT_FOLDER = "mulval_outputs/"
 GRAPH_FOLDER = "attack_graphs/"
+
 STATS_FOLDER = "analysis/"
 PLOT_SPACE_FOLDER = "analysis/plot/space/"
 PLOT_TIME_FOLDER = "analysis/plot/time/"
 PLOT_PATH_FOLDER = "analysis/plot/path/"
+
 path_stats_file = "analysis/path_stats.csv"
 path_stats_file_pruning = "analysis/path_stats_pruning.csv"
 mulval_time_file = STATS_FOLDER+"time_mulval.txt"

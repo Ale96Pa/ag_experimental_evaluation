@@ -13,7 +13,7 @@ import config
 Generate the benchmark of networks in "network" folder
 """
 def generate_network(filename):
-    logging.basicConfig(filename='network.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
+    logging.basicConfig(filename='logging/network.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
 
     if not os.path.exists(config.NETWORK_FOLDER): os.makedirs(config.NETWORK_FOLDER)
     generated_files = os.listdir(config.NETWORK_FOLDER)
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     NOTICE: this may require long time for NIST APIs. We suggest to use the 
     proposed syntetic inventory
     """
-    generate_intentory()
+    # generate_intentory()
 
     """
     Create networks for reachability graphs

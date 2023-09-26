@@ -44,13 +44,12 @@ def plot_by_graph_property(graph_param,model):
 
 def two_params_model_structure(param_y,param_x, vertical_params, fixed_param_dict,quantile=None):
     plt.rcParams.update({'font.size': 26})
-    fig, axs = plt.subplots(len(vertical_params), len(config.ag_models)-1)
+    fig, axs = plt.subplots(len(vertical_params), len(config.ag_models))
     fig.set_figwidth(30)
     fig.set_figheight(18)
 
     j=0
     for model in config.ag_models:
-        if model == "MULTI": continue
         i=0
         for param_color in vertical_params:
             df_model = pd.read_csv(config.STATS_FOLDER+config.get_graph_structure_filename(model))
@@ -66,29 +65,14 @@ def two_params_model_structure(param_y,param_x, vertical_params, fixed_param_dic
                 x_vals = list(param_df[param_x])[:9]
                 if type(y_vals[0])==str:
                     median_vals=[]
-                    boxes=[]
                     for k in range(0,len(y_vals)):
                         median_vals.append(json.loads(y_vals[k])[quantile])
                     axs[i][j].plot(x_vals, median_vals, label = group)
-                    #     box_vals = json.loads(y_vals[k])
-                    #     boxes.append({
-                    #             'label' : x_vals[k],
-                    #             'whislo': box_vals[0],    # Bottom whisker position
-                    #             'q1'    : box_vals[1],    # First quartile (25th percentile)
-                    #             'med'   : box_vals[2],    # Median         (50th percentile)
-                    #             'q3'    : box_vals[3],    # Third quartile (75th percentile)
-                    #             'whishi': box_vals[4],    # Top whisker position
-                    #             'fliers': []        # Outliers
-                    #         })
-                    # axs[i][j].bxp(boxes, showfliers=False)
                 else: 
-                    # if group == "lan50": axs[i][j].plot(x_vals, y_vals, label = "lan")
-                    # else: 
                     axs[i][j].plot(x_vals, y_vals, label = group, linewidth = '3')
             
-            if j==0:
-                axs[i][j].set_ylabel(param_y)
-                axs[i][j].legend(title=param_color, loc='upper left', bbox_to_anchor=(-0.7,0.9))
+            axs[i][j].set_ylabel(param_y)
+            axs[i][j].legend(title=param_color, loc='upper left', bbox_to_anchor=(-0.7,0.9))
             axs[i][j].set_xlabel(param_x)
             axs[i][j].set_title(model, y=0.92)
             i+=1
@@ -97,7 +81,7 @@ def two_params_model_structure(param_y,param_x, vertical_params, fixed_param_dic
     plt.savefig(config.PLOT_SPACE_FOLDER+param_x+"_"+param_y+".png", bbox_inches='tight')
 def two_params_time_by_size(param_y,param_x, vertical_params, fixed_param_dict,quantile=None):
     plt.rcParams.update({'font.size': 26})
-    fig, axs = plt.subplots(len(vertical_params), len(config.ag_models)-1)
+    fig, axs = plt.subplots(len(vertical_params), len(config.ag_models))
     fig.set_figwidth(25)
     fig.set_figheight(18)
 
@@ -124,20 +108,7 @@ def two_params_time_by_size(param_y,param_x, vertical_params, fixed_param_dict,q
                     for k in range(0,len(y_vals)):
                         median_vals.append(json.loads(y_vals[k])[quantile])
                     axs[i][j].plot(x_vals, median_vals, label = group)
-                    #     box_vals = json.loads(y_vals[k])
-                    #     boxes.append({
-                    #             'label' : x_vals[k],
-                    #             'whislo': box_vals[0],    # Bottom whisker position
-                    #             'q1'    : box_vals[1],    # First quartile (25th percentile)
-                    #             'med'   : box_vals[2],    # Median         (50th percentile)
-                    #             'q3'    : box_vals[3],    # Third quartile (75th percentile)
-                    #             'whishi': box_vals[4],    # Top whisker position
-                    #             'fliers': []        # Outliers
-                    #         })
-                    # axs[i][j].bxp(boxes, showfliers=False)
                 else: 
-                    # if group == "lan50": axs[i][j].plot(x_vals, y_vals, label = "lan")
-                    # else: 
                     axs[i][j].plot(x_vals, y_vals, label = group, linewidth = '3')
             
             if j==0:
@@ -439,7 +410,6 @@ def _3dplot(param_x, param_y, param_z, model, fixed_param_dict):
                 else:
                     z_all.append(0)
                     cols.append(get_color(0,vals_stats))
-        # if s==250: s=200
         xs.pop()
         xs.append(200)
         ax.bar(xs, z_all, zs=s, zdir='y', color=cols, alpha=0.8, width=8)
@@ -448,14 +418,12 @@ def _3dplot(param_x, param_y, param_z, model, fixed_param_dict):
 
     ax.set_xlabel(param_x)
     # ax.set_xticklabels(xs)
-    # ax.set_xticklabels(["0","1","3","10","50"])
     ax.set_ylabel(param_y)
     # ax.set_yticklabels(ys)
-    # ax.set_yticklabels(["50","10","3","1"])
     ax.set_zlabel(param_z)
 
-    # ax.set_yticks(ys)
-    # ax.set_title(model)
+    ax.set_yticks(ys)
+    ax.set_title(model)
 
     custom_lines = [Line2D([0], [0], color='#008837', lw=4),
                 Line2D([0], [0], color="#c2a5cf", lw=4),
@@ -463,12 +431,11 @@ def _3dplot(param_x, param_y, param_z, model, fixed_param_dict):
     ax.legend(custom_lines, ['<1hr', '<2hr', '>2hr'])
     ax.set_title("Vuln. diversity: "+str(fixed_param_dict["diversity_vuln"]), y=1.0, pad=-2)
 
-    plt.savefig("analysis/plot/path/3d_"+model+"_"+param_z+"_"+
+    plt.savefig(config.PLOT_PATH_FOLDER+model+"_"+param_z+"_"+
         str(fixed_param_dict["diversity_vuln"])+".png", bbox_inches='tight')
     
 
 def _3dplot_host_vuln(param_x, param_y, param_z, model, fixed_param_dict):
-    # df_path = pd.read_csv("analysis/path_stats.csv")
     df_model = pd.read_csv(config.STATS_FOLDER+config.get_graph_structure_filename(model))
     
     for k in fixed_param_dict.keys():
@@ -485,8 +452,6 @@ def _3dplot_host_vuln(param_x, param_y, param_z, model, fixed_param_dict):
     ys = sorted(list(set(vals_hosts)))
     xs = sorted(list(set(vals_vuln)))
 
-    # ys = [6,5,4,3,2,1]
-    # xs = [1,2,3,4,5,6]
     for s in ys:
         z_all=[]
         cols=[]
@@ -501,8 +466,9 @@ def _3dplot_host_vuln(param_x, param_y, param_z, model, fixed_param_dict):
                 z_all.append(0)
                 cols.append(get_color(0,vals_stats))
 
-        # xs.reverse()
         ax.bar(xs, z_all, zs=s, zdir='y', color=cols, alpha=0.8, width=15)
+
+    ax.invert_xaxis()
 
     ax.set_xlabel(param_x)
     ax.set_xticklabels(xs)
@@ -513,7 +479,7 @@ def _3dplot_host_vuln(param_x, param_y, param_z, model, fixed_param_dict):
     # ax.set_yticks(ys)
     ax.set_title(model)
 
-    plt.savefig("analysis/plot/space3d/"+model+"_"+param_z+"_"+
+    plt.savefig(config.PLOT_SPACE_FOLDER+model+"_"+param_z+"_"+
         str(fixed_param_dict["diversity_vuln"])+".png", bbox_inches='tight')
 
 def _3dplot_host_vuln_time(param_x, param_y, param_z, model, fixed_param_dict):
@@ -574,7 +540,7 @@ def _3dplot_host_vuln_time(param_x, param_y, param_z, model, fixed_param_dict):
                 Line2D([0], [0], color="#7b3294", lw=4)]
     ax.legend(custom_lines, ['<1hr', '<2hr', '>2hr'])
 
-    plt.savefig("analysis/plot/time3d/"+model+"_"+param_z+"_"+
+    plt.savefig(config.PLOT_TIME_FOLDER+model+"_"+param_z+"_"+
         str(fixed_param_dict["diversity_vuln"])+".png", bbox_inches='tight')
 
 if __name__ == "__main__":
@@ -595,31 +561,29 @@ if __name__ == "__main__":
     main_param_net="num_host"
     color_params_net = ['diversity_vuln','topology']#,'distro_vuln']
 
-    # for param in ['num_edges']:#,'num_nodes','density','num_strong_components']:
-    #     quantile=4
-    #     two_params_model_structure(param,main_param_net,color_params_net,fixed_param,quantile)
-    #     # two_params_space_by_size(param,main_param_net,color_params_net,fixed_param)
+    for param in ['num_edges']:#,'num_nodes','density','num_strong_components']:
+        quantile=4
+        two_params_model_structure(param,main_param_net,color_params_net,fixed_param,quantile)
+        # two_params_space_by_size(param,main_param_net,color_params_net,fixed_param)
     
     for param_time in ['generation_time']:
-        # two_params_graph_statistics(param_time,main_param_net,color_params_net,fixed_param)
-        # two_params_graph_statistics_simple(param_time,main_param_net,fixed_param)
         two_params_by_size(param_time,main_param_net,fixed_param)
-        # two_params_time_by_size(param_time,main_param_net,color_params_net,fixed_param)
+        two_params_time_by_size(param_time,main_param_net,color_params_net,fixed_param)
 
-        for model in ["NETSPA", "TVA", "MULVAL"]:
+        for model in config.ag_models:
             _3dplot_host_vuln_time('num_host', 'num_vuln', param_time, model, fixed_param)
 
     # fill_intractable_path()
 
-    # for param_path in ['num_paths','time_path']:
-    #     quantile_len=2
-    #     two_params_path_statistics(param_path,main_param_net,color_params_net,fixed_param,quantile_len)
+    for param_path in ['num_paths','time_path']:
+        quantile_len=2
+        two_params_path_statistics(param_path,main_param_net,color_params_net,fixed_param,quantile_len)
 
 
-    # for model in ["NETSPA"]:#, "TVA"]:
-    #     for param_z in ["time_path"]:#,"num_paths"]:
-    #         _3dplot("num_host", "num_vuln", param_z, model,fixed_param)
+    for model in config.ag_models:
+        for param_z in ["time_path"]:#,"num_paths"]:
+            _3dplot("num_host", "num_vuln", param_z, model,fixed_param)
 
-    # for model in ["NETSPA", "TVA", "MULVAL"]:
-    #     for param_z in ['num_edges']: # 'num_nodes','density','num_strong_components','time_density','time_components','time_degree','time_centrality']:
-    #         _3dplot_host_vuln('num_host', 'num_vuln', param_z, model, fixed_param)
+    for model in config.ag_models:
+        for param_z in ['num_edges']: # 'num_nodes','density','num_strong_components','time_density','time_components','time_degree','time_centrality']:
+            _3dplot_host_vuln('num_host', 'num_vuln', param_z, model, fixed_param)

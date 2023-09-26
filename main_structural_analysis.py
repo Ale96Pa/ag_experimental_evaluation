@@ -10,7 +10,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.par
 import config
 
 def write_graphstats(ag_file):
-    logging.basicConfig(filename='structural_graphs.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
+    logging.basicConfig(filename='logging/structural_graphs.log', level=logging.DEBUG, format='%(asctime)s - %(levelname)s: %(message)s')
 
     graph_file = config.GRAPH_FOLDER+ag_file
     if not os.path.exists(graph_file): 
@@ -87,7 +87,7 @@ if __name__ == "__main__":
     reset_statistics=False
     computed_files = []
     for model in config.ag_models:
-        if reset_statistics:
+        if reset_statistics or not os.path.exists(config.STATS_FOLDER+config.get_graph_structure_filename(model)):
             config.create_graph_structural_file(model, reset_statistics)
         else:
             df=pd.read_csv(config.STATS_FOLDER+config.get_graph_structure_filename(model))
