@@ -1,3 +1,11 @@
-# TODO
+# Experimental Evaluation of Attack Graph Scalability
 
-TO RUN MULVAL: instructions todo
+Requirements:
+
+- pandas
+- networkx
+- pebble
+- numpy
+- matplotlib
+
+## Instruction
