@@ -8,7 +8,7 @@ from algorithms.utils import get_vulns_from_host
 from generate_reachability import build_topology
 
 IT_NET="real_network/it_department.json"
-V2X_NET="real_network/v2x_network.json"
+V2X_NET="real_network/v2x_format.json"
 PANACEA_NET="real_network/medical_panacea.json"
 
 def check_size(devices):
@@ -68,8 +68,8 @@ def check_diversity(devices):
 def check_topology(netfile,edges):
     G=nx.DiGraph()
     format_edges=[]
-    if "v2x" in netfile: G = nx.from_edgelist(edges)
-    elif "panacea" in netfile:
+    # if "v2x" in netfile: G = nx.from_edgelist(edges)
+    if "v2x" in netfile or "panacea" in netfile:
         for e in edges:
             format_edges.append(e["host_link"])
         G = nx.from_edgelist(format_edges)
@@ -90,7 +90,6 @@ def check_topology(netfile,edges):
     return min_k, results[min_k]
 
 if __name__ == "__main__":
-
     for netfile in [V2X_NET,PANACEA_NET,IT_NET]:
         with open(netfile) as nf: content_network = json.load(nf)
         devices=content_network["devices"]

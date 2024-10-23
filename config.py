@@ -30,11 +30,16 @@ def get_pool_vulnerabilities(tot_vuln):
             return vulns1+vulns2+vulns3
 
 ### Reachability configuration
-nhosts = [5,10,25,50,75,100,200,300,500]
-nvulns = [5,10,25,50,75,100,200,300,500]
+# nhosts = [10,25,50,75,100,150,250,500]
+# nvulns = [10,25,50,75,100,150,250,500]
 topologies = ['mesh','random','star','ring','tree','powerlaw','lan0','lan25','lan50']
-distro = ['bernoulli','binomial','poisson','uniform']
-diversity = [0,0.25,0.5,0.75,1] #from all equal (0) to all diverse (1)
+# distro = ['uniform','poisson','bernoulli','binomial']
+# diversity = [0,0.25,0.5,0.75,1] #from all equal (0) to all diverse (1)
+nhosts = [25,50,100]
+nvulns = [10,25,50,75,100,150,200]
+distro = ['uniform']#,'poisson','bernoulli','binomial']
+diversity = [0,1] #from all equal (0) to all diverse (1)
+
 
 ### File storage setting
 NETWORK_FOLDER = "networks/"
@@ -70,7 +75,7 @@ def create_generation_stats_file(clean_stats=False):
                              'diversity_vuln','num_entries','num_targets','num_paths','generation_time','generation_paths'])
 
 ### Attack Graph models settings
-ag_models = ["NETSPA","TVA"] # without MulVAL
+ag_models = ["TVA"] # without MulVAL
 # ag_models = ["NETSPA","TVA","MULVAL"] # with MulVAL
 
 def get_graph_structure_filename(model):
