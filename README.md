@@ -27,7 +27,7 @@ The following libraries and packages are required for the correct installation o
 To install the requirements:
 
 ```
-python3 main_graph_generation.py
+pip install requirements
 ```
 
 ## Instructions
